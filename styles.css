@@ -1,0 +1,187 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #008000, #004d00);
+  font-family: Arial, sans-serif;
+}
+
+.team-scores {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border: 2px solid #fff;
+  padding: 10px;
+  background: #222;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 16px;
+  z-index: 100;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Reset button styling */
+.reset-container {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#resetButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 2px solid #004d00;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+#undo-button {
+  margin: 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#resetButton:hover {
+  background-color: #e0e0e0;
+}
+
+/* Player containers */
+.player-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.player-container.top {
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.player-container.bottom {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.player-container.left {
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.player-container.right {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.player-name.glow {
+  text-shadow:
+    0 0 8px gold,
+    0 0 12px yellow;
+}
+
+.player-name .score {
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.player-name.bottom {
+  color: lightskyblue;
+}
+.player-name.left {
+  color: gold;
+}
+.player-name.top {
+  color: palevioletred;
+}
+.player-name.right {
+  color: red;
+}
+
+.player-cards img {
+  max-height: 42px;
+  margin: 2px;
+  transition: transform 0.2s ease;
+}
+
+.player-cards img:hover {
+  transform: scale(2);
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.card.assigned-bottom {
+  border: 2px solid lightskyblue;
+}
+.card.assigned-left {
+  border: 2px solid gold;
+}
+.card.assigned-top {
+  border: 2px solid palevioletred;
+}
+.card.assigned-right {
+  border: 2px solid red;
+}
+
+/* Card grid styling */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(13, auto);
+  grid-gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  max-height: 80px;
+  cursor: pointer;
+  transition: filter 0.3s;
+  color: blue;
+}
+
+.card.highlight {
+  background-color: rgba(0, 0, 255, 0.3); /* Blue highlight */
+  border: 2px solid purple;
+  filter: brightness(1);
+}
+
+.card.played {
+  filter: brightness(0.5);
+}
