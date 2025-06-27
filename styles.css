@@ -69,6 +69,41 @@ body {
   cursor: pointer;
 }
 
+.bid-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.bid-buttons button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #000;
+  background-color: #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.bid-buttons button:hover {
+  background-color: #ddd;
+}
+
+.next-round-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#nextRoundBtn:disabled {
+  background-color: #aaa;
+  color: #444;
+  cursor: not-allowed;
+}
+
 #resetButton:hover {
   background-color: #e0e0e0;
 }
@@ -96,14 +131,32 @@ body {
 
 .player-container.left {
   left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .player-container.right {
   right: 10px;
+}
+
+.player-container.left,
+.player-container.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* centers vertically */
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}
+
+/* Make left/right mini-card containers wrap */
+.player-container.left .player-cards,
+.player-container.right .player-cards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 200px;
+  overflow: auto;
+  justify-content: center;
+  gap: 2px;
 }
 
 .player-name {

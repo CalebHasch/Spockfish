@@ -20,12 +20,12 @@
     <div class="reset-container">
       <button id="resetButton">New Game</button>
       <button id="undo-button">Undo</button>
+      <button id="nextRoundBtn" disabled>Next Round</button>
     </div>
     <div class="player-container top">
       <span class="player-name top"
         >Top - <span class="score" data-player="top">0</span></span
       >
-      <button class="start-btn" data-player="top">Start Round</button>
       <div class="player-cards top"></div>
     </div>
 
@@ -33,7 +33,6 @@
       <span class="player-name left"
         >Left - <span class="score" data-player="left">0</span></span
       >
-      <button class="start-btn" data-player="left">Start Round</button>
       <div class="player-cards left"></div>
     </div>
 
@@ -41,7 +40,6 @@
       <span class="player-name right"
         >Right - <span class="score" data-player="right">0</span></span
       >
-      <button class="start-btn" data-player="right">Start Round</button>
       <div class="player-cards right"></div>
     </div>
 
@@ -49,7 +47,6 @@
       <span class="player-name bottom"
         >Bottom - <span class="score" data-player="bottom">0</span></span
       >
-      <button class="start-btn" data-player="bottom">Start Round</button>
       <div class="player-cards bottom"></div>
     </div>
 
@@ -78,6 +75,14 @@
           <h3 id="bidPrompt">Enter bid for Bottom:</h3>
           <input type="number" id="bidInput" min="0" max="13" />
           <button id="submitBidBtn">Submit Bid</button>
+        </div>
+      </div>
+    </div>
+    <div id="biddingModal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="bidPrompt">Enter bid for:</h3>
+        <div class="bid-buttons">
+          <!-- JS will populate 0–13 buttons -->
         </div>
       </div>
     </div>

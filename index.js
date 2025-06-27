@@ -57,12 +57,16 @@ let glowTimeout = null;
 
 let biddingPlayerIndex = 0;
 let scoreLimit = 500;
+let roundNumber = 1;
 
+const biddingModal = document.getElementById("biddingModal");
+const bidPrompt = document.getElementById("bidPrompt");
+const bidButtonsContainer = biddingModal.querySelector(".bid-buttons");
+const nextRoundBtn = document.getElementById("nextRoundBtn");
 const modal = document.getElementById("gameModal");
 const startingPlayerSelect = document.getElementById("startingPlayerSelect");
 const scoreLimitInput = document.getElementById("scoreLimitInput");
 const biddingPhase = document.getElementById("biddingPhase");
-const bidPrompt = document.getElementById("bidPrompt");
 const bidInput = document.getElementById("bidInput");
 
 document.getElementById("startBiddingBtn").addEventListener("click", () => {
@@ -71,7 +75,7 @@ document.getElementById("startBiddingBtn").addEventListener("click", () => {
   biddingPlayerIndex = 0;
   biddingPhase.classList.remove("hidden");
   bidInput.value = "";
-  updateBidPrompt();
+  startBidding(startingPlayer); // After modal closes
 });
 
 document.getElementById("submitBidBtn").addEventListener("click", () => {
@@ -357,6 +361,7 @@ function applyTeamScoring() {
 
   updateScoreBox();
   resetForNextRound();
+  nextRoundBtn.disabled = false;
 }
 
 function updateScoreBox() {
@@ -416,4 +421,67 @@ function getCardValue(rank) {
       ace: 14,
     }[rank] || 0
   );
+}
+
+function startBidding(starting) {
+  startingPlayer = starting;
+  biddingPlayerIndex = 0;
+  biddingModal.classList.remove("hidden");
+  updateBidPrompt();
+}
+
+function updateBidPrompt() {
+  const currentPlayer = getPlayerForIndex(biddingPlayerIndex);
+  bidPrompt.textContent = `Enter bid for ${capitalize(currentPlayer)}:`;
+}
+
+nextRoundBtn.addEventListener("click", () => {
+  roundNumber++;
+
+  // Rotate starting player clockwise
+  const currentStartIndex = playerOrder.indexOf(startingPlayer);
+  startingPlayer = playerOrder[(currentStartIndex + 1) % 4];
+
+  // Reset state for new round
+  playerTricks = { bottom: 0, left: 0, top: 0, right: 0 };
+  playerBids = { bottom: 0, left: 0, top: 0, right: 0 };
+  assignmentHistory = [];
+  trickPlays = [];
+
+  // Reset card visuals
+  document.querySelectorAll(".card").forEach((card) => {
+    card.classList.remove("played", ...playerOrder.map((p) => `assigned-${p}`));
+    card.dataset.played = "false";
+  });
+
+  document
+    .querySelectorAll(".player-cards")
+    .forEach((div) => (div.innerHTML = ""));
+  document
+    .querySelectorAll(".player-name")
+    .forEach((el) => el.classList.remove("glow"));
+
+  updatePlayerLabels();
+  nextRoundBtn.disabled = true;
+  startBidding(startingPlayer);
+});
+
+for (let i = 0; i <= 13; i++) {
+  const btn = document.createElement("button");
+  btn.textContent = i;
+  btn.addEventListener("click", () => {
+    const currentPlayer = getPlayerForIndex(biddingPlayerIndex);
+    playerBids[currentPlayer] = i;
+    biddingPlayerIndex++;
+
+    if (biddingPlayerIndex < 4) {
+      updateBidPrompt();
+    } else {
+      biddingModal.classList.add("hidden");
+      awaitingAssignments = true;
+      currentAssignmentIndex = 0;
+      updatePlayerLabels();
+    }
+  });
+  bidButtonsContainer.appendChild(btn);
 }
