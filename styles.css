@@ -92,10 +92,19 @@ body {
   background-color: #ddd;
 }
 
-.next-round-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+#nextRoundBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 2px solid #004d00;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin: 5px;
+}
+
+#nextRoundBtn:hover:enabled {
+  background-color: #e0e0e0;
 }
 
 #nextRoundBtn:disabled {

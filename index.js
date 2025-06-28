@@ -49,6 +49,7 @@ let teamBags = {
 
 let scoreGoal = 250;
 let startingPlayer = null;
+let roundStartingPlayer = null;
 let awaitingAssignments = false;
 let currentAssignmentIndex = 0;
 let assignmentHistory = []; // Stack to track card assignments
@@ -59,6 +60,7 @@ let biddingPlayerIndex = 0;
 let scoreLimit = 500;
 let roundNumber = 1;
 
+const resetButton = document.getElementById("resetButton");
 const biddingModal = document.getElementById("biddingModal");
 const bidPrompt = document.getElementById("bidPrompt");
 const bidButtonsContainer = biddingModal.querySelector(".bid-buttons");
@@ -66,38 +68,18 @@ const nextRoundBtn = document.getElementById("nextRoundBtn");
 const modal = document.getElementById("gameModal");
 const startingPlayerSelect = document.getElementById("startingPlayerSelect");
 const scoreLimitInput = document.getElementById("scoreLimitInput");
-const biddingPhase = document.getElementById("biddingPhase");
-const bidInput = document.getElementById("bidInput");
 
 document.getElementById("startBiddingBtn").addEventListener("click", () => {
-  startingPlayer = startingPlayerSelect.value;
+  roundStartingPlayer = startingPlayerSelect.value;
   scoreLimit = parseInt(scoreLimitInput.value);
   biddingPlayerIndex = 0;
-  biddingPhase.classList.remove("hidden");
-  bidInput.value = "";
-  startBidding(startingPlayer); // After modal closes
-});
-
-document.getElementById("submitBidBtn").addEventListener("click", () => {
-  const bid = parseInt(bidInput.value);
-  const currentPlayer = getPlayerForIndex(biddingPlayerIndex);
-  playerBids[currentPlayer] = bid;
-  biddingPlayerIndex++;
-
-  if (biddingPlayerIndex < 4) {
-    bidInput.value = "";
-    updateBidPrompt();
-  } else {
-    modal.classList.add("hidden");
-    awaitingAssignments = true;
-    currentAssignmentIndex = 0;
-    updatePlayerLabels();
-  }
+  modal.classList.add("hidden");
+  startBidding(roundStartingPlayer); // After modal closes
 });
 
 function updateBidPrompt() {
   const currentPlayer = getPlayerForIndex(biddingPlayerIndex);
-  bidPrompt.textContent = `Enter bid for ${capitalize(currentPlayer)}:`;
+  bidPrompt.textContent = `Enter bid for: ${capitalize(currentPlayer)} player`;
 }
 
 // Generate card grid
@@ -138,29 +120,6 @@ suits.forEach((suit) => {
   });
 });
 
-document.querySelectorAll(".start-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    startingPlayer = btn.dataset.player;
-    awaitingAssignments = true;
-    currentAssignmentIndex = 0;
-
-    // Clear prior card assignments
-    document.querySelectorAll(".card").forEach((card) => {
-      card.classList.remove(
-        "assigned-bottom",
-        "assigned-left",
-        "assigned-top",
-        "assigned-right"
-      );
-    });
-
-    // Clear player UI cards
-    document
-      .querySelectorAll(".player-cards")
-      .forEach((div) => (div.innerHTML = ""));
-  });
-});
-
 // Add global event listeners
 document.addEventListener("mouseup", () => {
   selectedCards.forEach((card) => card.classList.remove("highlight"));
@@ -177,8 +136,6 @@ document.addEventListener("keydown", (e) => {
 });
 
 // Reset button functionality
-const resetButton = document.getElementById("resetButton");
-
 document.getElementById("resetButton").addEventListener("click", () => {
   // Reset game state
   teamScores = { vertical: 0, horizontal: 0 };
@@ -204,7 +161,6 @@ document.getElementById("resetButton").addEventListener("click", () => {
 
   // Show modal
   modal.classList.remove("hidden");
-  biddingPhase.classList.add("hidden");
 });
 
 function capitalize(str) {
@@ -360,7 +316,6 @@ function applyTeamScoring() {
   teamScores.horizontal += hScore;
 
   updateScoreBox();
-  resetForNextRound();
   nextRoundBtn.disabled = false;
 }
 
@@ -425,7 +380,7 @@ function getCardValue(rank) {
 
 function startBidding(starting) {
   startingPlayer = starting;
-  biddingPlayerIndex = 0;
+  biddingPlayerIndex = playerOrder.indexOf(roundStartingPlayer);
   biddingModal.classList.remove("hidden");
   updateBidPrompt();
 }
@@ -439,8 +394,8 @@ nextRoundBtn.addEventListener("click", () => {
   roundNumber++;
 
   // Rotate starting player clockwise
-  const currentStartIndex = playerOrder.indexOf(startingPlayer);
-  startingPlayer = playerOrder[(currentStartIndex + 1) % 4];
+  const currentStartIndex = playerOrder.indexOf(roundStartingPlayer);
+  roundStartingPlayer = playerOrder[(currentStartIndex + 1) % 4];
 
   // Reset state for new round
   playerTricks = { bottom: 0, left: 0, top: 0, right: 0 };
